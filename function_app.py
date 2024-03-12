@@ -10,6 +10,8 @@ https://stackoverflow.com/questions/72904046/how-to-write-to-a-text-file-in-a-bl
 import logging
 import azure.functions as func
 import datetime as dt
+import urllib.request
+import json
 
 app = func.FunctionApp()
 
@@ -25,15 +27,19 @@ def json_downloader(myTimer: func.TimerRequest) -> None: #, output: func.Out[str
     if "." in time_string:
         time_string = time_string[:time_string.index(".")]
 
-    content = f"Hello world, the time is: {time_string}"
-
-    # json url
     bubi_json_url = "https://maps.nextbike.net/maps/nextbike-live.json?domains=bh"
-    try:
-        pass
-    except Exception as e:
-        logging.error(f"Failed to download JSON file: {e}")
 
-    #output.set(content)
+    available_bikes = 0
+    
+    try:
+        with urllib.request.urlopen(bubi_json_url) as url:
+            bubi_data = json.load(url)
+            available_bikes = bubi_data["countries"][0]["available_bikes"]
+
+    except Exception as e:
+        logging.error(f"Failed to read JSON file: {e}")
+
+    #output.set(available_bikes)
     
     logging.info(f"Bubi JSON with timer executed at {time_string}.")
+    logging.info(f"There were {available_bikes} at {time_string}")
