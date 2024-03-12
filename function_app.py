@@ -15,9 +15,9 @@ app = func.FunctionApp()
 
 @app.schedule(schedule="0 */10 * * * *", arg_name="myTimer", run_on_startup=True,
               use_monitor=False)
-@app.blob_output(arg_name="output", connection="connectionstring",
-              path="{DateTime}.json")
-def timer_trigger(myTimer: func.TimerRequest, output: func.Out[str]) -> None:
+#@app.blob_output(arg_name="output", connection="connectionstring",
+#              path="{DateTime}.json")
+def timer_trigger(myTimer: func.TimerRequest) -> None: #, output: func.Out[str]) -> None:
     if myTimer.past_due:
         logging.info('The timer is past due!')
 
@@ -32,6 +32,6 @@ def timer_trigger(myTimer: func.TimerRequest, output: func.Out[str]) -> None:
     except Exception as e:
         logging.error(f"Failed to download JSON file: {e}")
 
-    output.set(content)
+    #output.set(content)
     
-    logging.info('Python timer trigger function executed.')
+    logging.info('Bubi JSON with timer executed.')
