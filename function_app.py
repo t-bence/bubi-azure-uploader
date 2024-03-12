@@ -25,6 +25,13 @@ def timer_trigger(myTimer: func.TimerRequest, output: func.Out[str]) -> None:
 
     content = f"Hello world, the time is: {time_string}"
 
+    # json url
+    bubi_json_url = "https://maps.nextbike.net/maps/nextbike-live.json?domains=bh"
+    try:
+        pass
+    except Exception as e:
+        logging.error(f"Failed to download JSON file: {e}")
+
     output.set(content)
     
     logging.info('Python timer trigger function executed.')
