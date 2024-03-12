@@ -14,7 +14,7 @@ import urllib.request
 
 app = func.FunctionApp()
 
-@app.schedule(schedule="0 */10 * * * *", arg_name="myTimer", run_on_startup=False,
+@app.schedule(schedule="0 */10 * * * *", arg_name="myTimer", run_on_startup=True,
               use_monitor=False)
 @app.blob_output(arg_name="output", connection="connectionstring",
               path="{DateTime}.json")
