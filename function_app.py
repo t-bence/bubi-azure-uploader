@@ -11,15 +11,14 @@ import logging
 import azure.functions as func
 import datetime as dt
 import urllib.request
-import json
 
 app = func.FunctionApp()
 
 @app.schedule(schedule="0 */10 * * * *", arg_name="myTimer", run_on_startup=False,
               use_monitor=False)
-#@app.blob_output(arg_name="output", connection="connectionstring",
-#              path="{DateTime}.json")
-def json_downloader(myTimer: func.TimerRequest) -> None: #, output: func.Out[str]) -> None:
+@app.blob_output(arg_name="output", connection="connectionstring",
+              path="{DateTime}.json")
+def json_downloader(myTimer: func.TimerRequest, output: func.Out[str]) -> None:
     if myTimer.past_due:
         logging.info('The timer is past due!')
 
@@ -29,18 +28,17 @@ def json_downloader(myTimer: func.TimerRequest) -> None: #, output: func.Out[str
 
     bubi_json_url = "https://maps.nextbike.net/maps/nextbike-live.json?domains=bh"
 
-    available_bikes = 0
+    bubi_data = None
     
     try:
         with urllib.request.urlopen(bubi_json_url) as url:
-            bubi_data = json.load(url)
-            available_bikes = bubi_data["countries"][0]["available_bikes"]
-
+            bubi_data = url.read()
     except Exception as e:
         logging.error(f"Failed to read JSON file: {e}")
 
-
-    logging.info(f"There were {available_bikes} available bikes at {time_string}")
-
-    #output.set(available_bikes)
-    
+    # write data to output blob
+    if bubi_data is not None:
+        output.set(bubi_data)
+        logging.info("Output written to blob storage.")
+    else:
+        logging.warn("There was no bubi data to write.")
