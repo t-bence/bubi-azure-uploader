@@ -22,10 +22,6 @@ def json_downloader(myTimer: func.TimerRequest, output: func.Out[str]) -> None:
     if myTimer.past_due:
         logging.info('The timer is past due!')
 
-    time_string = dt.datetime.utcnow().isoformat()
-    if "." in time_string:
-        time_string = time_string[:time_string.index(".")]
-
     bubi_json_url = "https://maps.nextbike.net/maps/nextbike-live.json?domains=bh"
 
     bubi_data = None
