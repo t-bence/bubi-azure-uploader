@@ -13,11 +13,11 @@ import datetime as dt
 
 app = func.FunctionApp()
 
-@app.schedule(schedule="0 */10 * * * *", arg_name="myTimer", run_on_startup=True,
+@app.schedule(schedule="0 */1 * * * *", arg_name="myTimer", run_on_startup=True,
               use_monitor=False)
 #@app.blob_output(arg_name="output", connection="connectionstring",
 #              path="{DateTime}.json")
-def timer_trigger(myTimer: func.TimerRequest) -> None: #, output: func.Out[str]) -> None:
+def json_downloader(myTimer: func.TimerRequest) -> None: #, output: func.Out[str]) -> None:
     if myTimer.past_due:
         logging.info('The timer is past due!')
 
@@ -34,4 +34,4 @@ def timer_trigger(myTimer: func.TimerRequest) -> None: #, output: func.Out[str])
 
     #output.set(content)
     
-    logging.info('Bubi JSON with timer executed.')
+    logging.info(f"Bubi JSON with timer executed at {time_string}.")
