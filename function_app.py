@@ -22,6 +22,8 @@ def json_downloader(myTimer: func.TimerRequest) -> None: #, output: func.Out[str
         logging.info('The timer is past due!')
 
     time_string = dt.datetime.utcnow().isoformat()
+    if "." in time_string:
+        time_string = time_string[:time_string.index(".")]
 
     content = f"Hello world, the time is: {time_string}"
 
