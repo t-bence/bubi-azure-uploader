@@ -15,7 +15,7 @@ import json
 
 app = func.FunctionApp()
 
-@app.schedule(schedule="0 */1 * * * *", arg_name="myTimer", run_on_startup=True,
+@app.schedule(schedule="0 */10 * * * *", arg_name="myTimer", run_on_startup=False,
               use_monitor=False)
 #@app.blob_output(arg_name="output", connection="connectionstring",
 #              path="{DateTime}.json")
@@ -39,7 +39,8 @@ def json_downloader(myTimer: func.TimerRequest) -> None: #, output: func.Out[str
     except Exception as e:
         logging.error(f"Failed to read JSON file: {e}")
 
+
+    logging.info(f"There were {available_bikes} available bikes at {time_string}")
+
     #output.set(available_bikes)
     
-    logging.info(f"Bubi JSON with timer executed at {time_string}.")
-    logging.info(f"There were {available_bikes} at {time_string}")
