@@ -17,11 +17,12 @@ app = func.FunctionApp()
 @app.schedule(schedule="0 */10 * * * *", arg_name="myTimer", run_on_startup=True,
               use_monitor=False)
 @app.blob_output(arg_name="output", connection="AzureWebJobsStorage",
-              path="bubi-jsons/{DateTime}.json")
+              path="jsons/{DateTime}.json")
 def json_downloader(myTimer: func.TimerRequest, output: func.Out[str]) -> None:
+    logging.info(f"Running at {dt.datetime.now().isoformat()}")
     if myTimer.past_due:
         logging.info('The timer is past due!')
-
+    
     bubi_json_url = "https://maps.nextbike.net/maps/nextbike-live.json?domains=bh"
 
     bubi_data = None
@@ -37,4 +38,4 @@ def json_downloader(myTimer: func.TimerRequest, output: func.Out[str]) -> None:
         output.set(bubi_data)
         logging.info("Output written to blob storage.")
     else:
-        logging.warn("There was no bubi data to write.")
+        logging.warning("There was no bubi data to write.")
