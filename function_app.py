@@ -1,16 +1,8 @@
-"""
-A simple Azure function to scrape bubi bike data and save it to blob storage
-
-https://github.com/yokawasa/azure-functions-python-samples/blob/master/v2functions/queue-trigger-blob-in-out-binding/readme.md
-
-https://stackoverflow.com/questions/72904046/how-to-write-to-a-text-file-in-a-blob-container-using-azure-function-with-python
-
-"""
-
+import datetime as dt
+import os
+import urllib.request
 import logging
 import azure.functions as func
-import datetime as dt
-import urllib.request
 
 app = func.FunctionApp()
 
@@ -23,7 +15,7 @@ def json_downloader(myTimer: func.TimerRequest, output: func.Out[str]) -> None:
     if myTimer.past_due:
         logging.info('The timer is past due!')
     
-    bubi_json_url = "https://maps.nextbike.net/maps/nextbike-live.json?domains=bh"
+    bubi_json_url = os.environ["TARGET_URL"]
 
     bubi_data = None
     
